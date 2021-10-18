@@ -187,14 +187,14 @@ class PyCrown:
         fname :   str
                   Path to LiDAR dataset (.las or .laz-file)
         """
-        las = laspy.file.File(str(fname), mode='r')
+        las = laspy.read(str(fname))
         lidar_points = np.array((
             las.x, las.y, las.z, las.intensity, las.return_num,
             las.classification
         )).transpose()
         colnames = ['x', 'y', 'z', 'intensity', 'return_num', 'classification']
         self.las = pd.DataFrame(lidar_points, columns=colnames)
-        las.close()
+        
 
     def _check_empty(self):
         """ Helper function raising an Exception if no trees present
@@ -469,7 +469,7 @@ class PyCrown:
         self.chm = self._smooth_raster(self.chm0, ws, self.resolution,
                                        circular=circular)
         self.chm0[np.isnan(self.chm0)] = 0.
-        zmask = (self.chm < 0.5) | np.isnan(self.chm) | (self.chm > 60.)
+        zmask = (self.chm < 0.5) | np.isnan(self.chm) | (self.chm > 300.)
         self.chm[zmask] = 0
 
     def tree_detection(self, raster, resolution=None, ws=5, hmin=20,
@@ -876,21 +876,19 @@ class PyCrown:
             print('Classifying point cloud')
             lidar_in_crowns = lidar_in_crowns[lidar_tree_mask]
             lidar_tree_class = lidar_tree_class[lidar_tree_mask]
-            header = laspy.header.Header()
             self.outpath.mkdir(parents=True, exist_ok=True)
-            outfile = laspy.file.File(
-                self.outpath / "trees.las", mode="w", header=header
-            )
+            outfile=laspy.LasData(self.las.header)
             xmin = np.floor(np.min(lidar_in_crowns.x))
             ymin = np.floor(np.min(lidar_in_crowns.y))
             zmin = np.floor(np.min(lidar_in_crowns.z))
-            outfile.header.offset = [xmin, ymin, zmin]
-            outfile.header.scale = [0.001, 0.001, 0.001]
+            outfile.header.offsets = [xmin, ymin, zmin]
+            outfile.header.scales = [0.001, 0.001, 0.001]
             outfile.x = lidar_in_crowns.x
             outfile.y = lidar_in_crowns.y
             outfile.z = lidar_in_crowns.z
+            #writing tree class to intensity attribute
             outfile.intensity = lidar_tree_class
-            outfile.close()
+            outfile.write(self.outpath / "trees.las")
 
         self.lidar_in_crowns = lidar_in_crowns
 
