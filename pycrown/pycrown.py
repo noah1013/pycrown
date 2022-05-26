@@ -1,7 +1,8 @@
+# -*- coding: cp1252 -*-
 """
 PyCrown - Fast raster-based individual tree segmentation for LiDAR data
 -----------------------------------------------------------------------
-Copyright: 2018, Jan Zörner
+Copyright: 2018, Jan ZÃƒÂ¶rner
 Licence: GNU GPLv3
 """
 
@@ -60,12 +61,12 @@ class GDALFileNotFoundException(Exception):
 
 class PyCrown:
 
-    __author__ = "Dr. Jan Zörner"
-    __copyright__ = "Copyright 2018, Jan Zörner"
-    __credits__ = ["Jan Zörner", "John Dymond", "James Shepherd", "Ben Jolly"]
+    __author__ = "Dr. Jan ZÃƒÂ¶rner"
+    __copyright__ = "Copyright 2018, Jan ZÃƒÂ¶rner"
+    __credits__ = ["Jan ZÃƒÂ¶rner", "John Dymond", "James Shepherd", "Ben Jolly"]
     __license__ = "GNU GPLv3"
     __version__ = "0.1"
-    __maintainer__ = "Jan Zörner"
+    __maintainer__ = "Jan ZÃƒÂ¶rner"
     __email__ = "zoernerj@landcareresearch.co.nz"
     __status__ = "Development"
 
@@ -401,7 +402,7 @@ class PyCrown:
         return filters.median_filter(
             raster, footprint=self._get_kernel(ws, circular=circular))
 
-    def clip_data_to_bbox(self, bbox, las_offset=10):
+    def clip_data_to_bbox(self, bbox):
         """ Clip input data to subset region based on bounding box
 
         Parameters
@@ -421,14 +422,7 @@ class PyCrown:
             self.chm = self.chm[row_min:row_max, col_min:col_max]
         self.dtm = self.dtm[row_min:row_max, col_min:col_max]
         self.dsm = self.dsm[row_min:row_max, col_min:col_max]
-        lasmask = (
-            (self.las.x >= lon_min - las_offset) &
-            (self.las.x <= lon_max + las_offset) &
-            (self.las.y >= lat_min - las_offset) &
-            (self.las.y <= lat_max + las_offset)
-        )
-        self.las = self.las[lasmask]
-
+        
         self.ul_lon = lon_min
         self.ul_lat = lat_max
 
@@ -469,6 +463,7 @@ class PyCrown:
         self.chm = self._smooth_raster(self.chm0, ws, self.resolution,
                                        circular=circular)
         self.chm0[np.isnan(self.chm0)] = 0.
+        #where 300 is max height of expected trees in feet
         zmask = (self.chm < 0.5) | np.isnan(self.chm) | (self.chm > 300.)
         self.chm[zmask] = 0
 
@@ -654,11 +649,13 @@ class PyCrown:
         loc :      str, optional
                    tree seed position: `top` or `top_cor`
         """
+
+        # edited lat_min to + inbuf for Northern Hemisphere
         if bbox:
             lon_min, lon_max, lat_min, lat_max = bbox
         elif inbuf:
             lat_max = self.ul_lat - inbuf
-            lat_min = self.ul_lat - (self.chm.shape[0] * self.resolution) - inbuf
+            lat_min = self.ul_lat - (self.chm.shape[0] * self.resolution) + inbuf
             lon_min = self.ul_lon + inbuf
             lon_max = self.ul_lon + (self.chm.shape[1] * self.resolution) - inbuf
         elif f_tiles:

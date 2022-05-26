@@ -3,8 +3,7 @@ scipy==1.1.0
 scikit-image>=0.14.0
 Cython>=0.28.4
 numba>=0.39.0
-pandas==0.23.3
-geopandas==0.3.0
+geopandas==0.10.2
 Rtree>=0.8.3
 Fiona>=1.7.10
 laspy>=2.0
