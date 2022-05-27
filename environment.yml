@@ -10,7 +10,7 @@ dependencies:
   - Cython>=0.28.4
   - numba>=0.39.0
   - pandas==0.23.3
-  - geopandas==0.3.0
+  - geopandas
   - Rtree>=0.8.3
   - Fiona>=1.7.10
   - GDAL>=2.2.2
