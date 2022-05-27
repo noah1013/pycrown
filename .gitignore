@@ -3,6 +3,7 @@
 result/
 build/
 dist/
+example/pycrown-env
 .pytest_cache
 __pycache__
 *.shp
@@ -12,3 +13,4 @@ __pycache__
 *.prj
 *.c
 *.pyd
+.ipynb_checkpoints
