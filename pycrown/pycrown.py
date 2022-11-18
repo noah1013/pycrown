@@ -2,7 +2,7 @@
 """
 PyCrown - Fast raster-based individual tree segmentation for LiDAR data
 -----------------------------------------------------------------------
-Copyright: 2018, Jan ZÃƒÂ¶rner
+Copyright: 2018, Jan ZÃƒÆ’Ã‚Â¶rner
 Licence: GNU GPLv3
 """
 
@@ -26,8 +26,8 @@ from skimage.morphology import watershed
 from skimage.filters import threshold_otsu
 # from skimage.feature import peak_local_max
 
-import gdal
-import osr
+from osgeo import gdal
+from osgeo import osr
 
 from shapely.geometry import mapping, Point, Polygon
 
@@ -61,12 +61,12 @@ class GDALFileNotFoundException(Exception):
 
 class PyCrown:
 
-    __author__ = "Dr. Jan ZÃƒÂ¶rner"
-    __copyright__ = "Copyright 2018, Jan ZÃƒÂ¶rner"
-    __credits__ = ["Jan ZÃƒÂ¶rner", "John Dymond", "James Shepherd", "Ben Jolly"]
+    __author__ = "Dr. Jan ZÃƒÆ’Ã‚Â¶rner"
+    __copyright__ = "Copyright 2018, Jan ZÃƒÆ’Ã‚Â¶rner"
+    __credits__ = ["Jan ZÃƒÆ’Ã‚Â¶rner", "John Dymond", "James Shepherd", "Ben Jolly"]
     __license__ = "GNU GPLv3"
     __version__ = "0.1"
-    __maintainer__ = "Jan ZÃƒÂ¶rner"
+    __maintainer__ = "Jan ZÃƒÆ’Ã‚Â¶rner"
     __email__ = "zoernerj@landcareresearch.co.nz"
     __status__ = "Development"
 
