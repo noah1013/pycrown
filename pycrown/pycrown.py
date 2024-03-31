@@ -543,7 +543,7 @@ class PyCrown:
         else:
             df = pd.DataFrame(np.array([trees, trees], dtype='object').T,
                               dtype='object', columns=['top_cor', 'top'])
-            self.trees = self.trees.append(df)
+            self.trees = pd.concat([self.trees, df])               
 
         self._check_empty()
 
